@@ -7,7 +7,7 @@ exports.createUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email ||  !password) {
       return res.status(400).json({ error: "Name, email, and password are required." });
     }
 
@@ -145,7 +145,6 @@ exports.loginUser = async (req, res) => {
     console.log("✅ User found:", user.email);
     console.log("🔐 Stored password:", user.password);
     console.log("🔑 Entered password:", password);
-
     // Directly compare entered password with stored password
     if (password !== user.password) {
       console.log("❌ Password does not match!");
@@ -154,11 +153,7 @@ exports.loginUser = async (req, res) => {
 
     console.log("✅ Password matched successfully!");
 
-    res.status(200).json({
-      success: true,
-      message: "Login successful",
-      role: user.role,
-    });
+    res.status(200).json(user);
 
   } catch (error) {
     console.error("❌ Error in loginUser:", error);

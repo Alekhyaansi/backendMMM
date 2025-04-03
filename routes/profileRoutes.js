@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const profileController = require("../controllers/profileController");
-const usercontroller=require("../controllers/userController")
+const userController = require("../controllers/userController");
 
 /**
  * @swagger
@@ -33,20 +33,16 @@ const usercontroller=require("../controllers/userController")
  *           type: string
  *           enum: [Male, Female]
  *           description: Gender of the user
- *         age:
+ *         avatar:
  *           type: integer
- *           description: Age of the user
- *         profileImage:
- *           type: string
- *           description: URL of the user's profile image
+ *           description: Avatar as an integer (predefined) or string URL
  *       example:
  *         id: 1
  *         name: John Doe
- *         email: johndoe@example.com
+ *         email: johndoe@gmail.com
  *         bio: Software Developer
  *         gender: Male
- *         age: 30
- *         profileImage: "http://example.com/profile.jpg"
+ *         avatar: 3
  *
  *     CreateProfile:
  *       type: object
@@ -64,17 +60,14 @@ const usercontroller=require("../controllers/userController")
  *         gender:
  *           type: string
  *           enum: [Male, Female]
- *         age:
+ *         avatar:
  *           type: integer
- *         profileImage:
- *           type: string
  *       example:
  *         name: Jane Doe
- *         email: janedoe@example.com
+ *         email: janedoe@gmail.com
  *         bio: Tech enthusiast
  *         gender: Female
- *         age: 25
- *         profileImage: "http://example.com/profile.jpg"
+ *         avatar: 4
  */
 
 /**
@@ -97,7 +90,7 @@ const usercontroller=require("../controllers/userController")
  *             schema:
  *               $ref: '#/components/schemas/Profile'
  *       400:
- *         description: Validation error - Missing required fields
+ *         description: Validation error - Missing required fields or invalid data
  */
 router.post("/profiles", profileController.createProfile);
 
@@ -119,7 +112,7 @@ router.post("/profiles", profileController.createProfile);
  */
 router.get("/profiles", profileController.getAllProfiles);
 
-router.post("/createprofile",usercontroller.createProfile)
+router.post("/createprofile", userController.createProfile);
 
 /**
  * @swagger
@@ -188,7 +181,7 @@ router.put("/profiles/:id", profileController.updateProfile);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: integer    
  *         description: ID of the profile
  *     responses:
  *       204:
@@ -197,7 +190,5 @@ router.put("/profiles/:id", profileController.updateProfile);
  *         description: Profile not found
  */
 router.delete("/profiles/:id", profileController.deleteProfile);
-
-
 
 module.exports = router;

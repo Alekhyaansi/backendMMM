@@ -3,21 +3,24 @@ const Profile = require("../models/profileModel");
 // CREATE PROFILE
 exports.createProfile = async (req, res) => {
   try {
-    const { name, email, bio, gender, age, profileImage } = req.body;
+    const { name, email, bio, gender, avatar } = req.body;
 
-    if (!name || !email || !gender) {
+    if (!name || !email||  !gender) {
       return res.status(400).json({ error: "Name, email, and gender are required." });
     }
 
-    // Check if email already exists
-    const existingProfile = await Profile.findOne({ email });
+    
+    const existingProfile = await Profile.findOne({ where: { email } });
     if (existingProfile) {
       return res.status(400).json({ error: "Email already taken." });
     }
 
-    const profile = await Profile.create({
-      name, email, bio, gender, age, profileImage
-    });
+    // Ensure avatar is valid (either an integer or a URL string)
+    if (avatar !== undefined && typeof avatar !== "number" && typeof avatar !== "string") {
+      return res.status(400).json({ error: "Invalid avatar format." });
+    }
+
+    const profile = await Profile.create({ name, email, bio, gender, avatar });
 
     res.status(201).json({
       message: "Profile Created Successfully",
@@ -31,7 +34,7 @@ exports.createProfile = async (req, res) => {
 // GET ALL PROFILES
 exports.getAllProfiles = async (req, res) => {
   try {
-    const profiles = await Profile.find();
+    const profiles = await Profile.findAll();
     res.status(200).json({ message: "Profiles Retrieved Successfully", profiles });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,7 +57,7 @@ exports.getProfileById = async (req, res) => {
 // UPDATE PROFILE
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, email, bio, gender, age, profileImage } = req.body;
+    const { name, email, bio, gender, avatar } = req.body;
     const profile = await Profile.findById(req.params.id);
 
     if (!profile) {
@@ -65,12 +68,16 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ error: "Name, email, and gender are required." });
     }
 
+    // Ensure avatar is valid (either an integer or a URL string)
+    if (avatar !== undefined && typeof avatar !== "number" && typeof avatar !== "string") {
+      return res.status(400).json({ error: "Invalid avatar format." });
+    }
+
     profile.name = name;
     profile.email = email;
     profile.bio = bio || profile.bio;
     profile.gender = gender;
-    profile.age = age || profile.age;
-    profile.profileImage = profileImage || profile.profileImage;
+    profile.avatar = avatar || profile.avatar; // Update avatar if provided
 
     await profile.save();
 
@@ -88,7 +95,7 @@ exports.deleteProfile = async (req, res) => {
       return res.status(404).json({ error: "Profile Not Found" });
     }
 
-    await profile.deleteOne();
+    await profile.destroy();
     res.status(200).json({ message: "Profile Deleted Successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });

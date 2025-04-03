@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database"); // ✅ Correct import
+const sequelize = require("../config/database");
 const user = require("./userModel")
 
 const Profile = sequelize.define("Profile", {
@@ -24,25 +24,20 @@ const Profile = sequelize.define("Profile", {
   },
   gender: {
     type: DataTypes.ENUM("Male", "Female"),
+    allowNull: false,
+  },
+  avatar: {
+    type: DataTypes.STRING, // Store URL or file path
     allowNull: true,
   },
-  age: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  profileImage: {
-    type: DataTypes.STRING, // URL or path to image
-    allowNull: true,
-  },
-  // Add userId to reference the User table
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,  // Ensure the profile belongs to a user
   },
 }, { timestamps: true });
 
-// Define associations
 user.hasOne(Profile, { foreignKey: "userId" });  // A User has one Profile
 Profile.belongsTo(user, { foreignKey: "id" }); // A Profile belongs to one User
+ 
 
 module.exports = Profile;
