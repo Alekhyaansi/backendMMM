@@ -25,7 +25,7 @@ const sequelize = new Sequelize(
 // Test Database Connection
 sequelize
   .authenticate()
-  .then(() => console.log("✅ MySQL Database connected successfully"))
+  .then(() => console.log("✅  Database connected to Railway"))
   .catch((err) => {
     console.error("❌ Database connection failed:", err);
     process.exit(1);
@@ -43,3 +43,5 @@ sequelize
   .sync({ alter: true }) // Updates tables if needed
   .then(() => console.log("✅ MySQL Tables synced"))
   .catch((err) => console.error("❌ Error syncing tables:", err));
+
+  
