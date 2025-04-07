@@ -31,6 +31,6 @@ const Post = require("../models/postModel");
 
 // ✅ Sync models with DB (apply any table changes)
 sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => console.log("✅ MySQL Tables synced"))
   .catch((err) => console.error("❌ Error syncing tables:", err));
