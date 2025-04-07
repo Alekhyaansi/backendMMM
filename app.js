@@ -1,4 +1,6 @@
 require("dotenv").config();
+const PORT = process.env.PORT || 5000;
+
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
@@ -36,9 +38,9 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API for user authentication, profile management, and post management",
     },
-    servers: [{ url: "http://localhost:5000" }],
+    servers: [{ url: `http://localhost:${PORT}` }],
   },
-  apis: ["./routes/userRoutes.js", "./routes/postRoutes.js", "./routes/profileRoutes.js"], 
+  apis: ["./routes/userRoutes.js", "./routes/postRoutes.js", "./routes/profileRoutes.js"],
 };
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -49,11 +51,12 @@ app.use("/", postRoutes);
 app.use("/", profileRoutes);
 
 // Start Server
-const PORT = process.env.PORT || 5000;
 sequelize
   .sync({ alter: true }) // Ensure tables are updated if needed
   .then(() => {
     console.log("✅ MySQL Database connected & tables synced");
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    app.listen(PORT, "0.0.0.0", () =>
+      console.log(`🚀 Server running on http://0.0.0.0:${PORT}`)
+    );
   })
   .catch((err) => console.error("❌ Error connecting to database:", err));
