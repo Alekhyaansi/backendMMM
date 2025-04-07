@@ -38,7 +38,7 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API for user authentication, profile management, and post management",
     },
-    servers: [{ url: `http://localhost:${PORT}` }],
+    servers: [{ url: `https://backendmmm-production.up.railway.app/` }],
   },
   apis: ["./routes/userRoutes.js", "./routes/postRoutes.js", "./routes/profileRoutes.js"],
 };
@@ -56,7 +56,8 @@ sequelize
   .then(() => {
     console.log("✅ MySQL Database connected & tables synced");
     app.listen(PORT, "0.0.0.0", () =>
-      console.log(`🚀 Server running on http://0.0.0.0:${PORT}`)
+      console.log(`🚀 Server running on https://backendmmm-production.up.railway.app`)
+
     );
   })
   .catch((err) => console.error("❌ Error connecting to database:", err));
